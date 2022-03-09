@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
-
+//ThoughtsSchema
 const thoughtSchema = new Schema(
   {
     thoughtText: {
@@ -14,18 +14,13 @@ const thoughtSchema = new Schema(
         default: Date.now,
         get: createdAtVal => dateFormat(createdAtVal)
       },
+      username: {
+        type: String,
+        required: true
+      },
     
-    thoughts: [ {
-        type: Schema.Types.ObjectId,
-        ref: 'Thought'
-      }],
-    friends: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-      }
-    ]
-  },
+  reactions:[ReactionSchema],
+},
   {
     toJSON: {
       virtuals: true,
@@ -33,6 +28,34 @@ const thoughtSchema = new Schema(
     },
     // prevents virtuals from creating duplicate of _id as `id`
     id: false
+  }
+);
+// ReactionSchema
+const ReactionSchema = new Schema({
+  
+  reactionId: {
+      type: Schema.Types.ObjectId,
+      default: () => new Types.ObjectId()
+  },
+  reactionBody: {
+      type: String,
+      required: true,
+      maxlength: 280
+  },
+  username: {
+      type: String,
+      required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    get: createdAtVal => dateFormat(createdAtVal)
+  },
+},
+  {
+      toJson: {
+          getters: true
+      }
   }
 );
 
