@@ -1,5 +1,33 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model,Types } = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
+// ReactionSchema
+const reactionSchema = new Schema({
+
+  reactionId: {
+    type: Schema.Types.ObjectId,
+    default: () => new Types.ObjectId()
+  },
+  reactionBody: {
+    type: String,
+    required: true,
+    maxlength: 280
+  },
+  username: {
+    type: String,
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    get: createdAtVal => dateFormat(createdAtVal)
+  },
+},
+  {
+    toJson: {
+      getters: true
+    }
+  }
+);
 //ThoughtsSchema
 const thoughtSchema = new Schema(
   {
@@ -10,17 +38,16 @@ const thoughtSchema = new Schema(
       maxlength: 280
     },
     createdAt: {
-        type: Date,
-        default: Date.now,
-        get: createdAtVal => dateFormat(createdAtVal)
-      },
-      username: {
-        type: String,
-        required: true
-      },
-    
-  reactions:[ReactionSchema],
-},
+      type: Date,
+      default: Date.now,
+      get: createdAtVal => dateFormat(createdAtVal)
+    },
+    username: {
+      type: String,
+      required: true
+    },
+    reactions:[reactionSchema]
+  },
   {
     toJSON: {
       virtuals: true,
@@ -30,38 +57,11 @@ const thoughtSchema = new Schema(
     id: false
   }
 );
-// ReactionSchema
-const ReactionSchema = new Schema({
-  
-  reactionId: {
-      type: Schema.Types.ObjectId,
-      default: () => new Types.ObjectId()
-  },
-  reactionBody: {
-      type: String,
-      required: true,
-      maxlength: 280
-  },
-  username: {
-      type: String,
-      required: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    get: createdAtVal => dateFormat(createdAtVal)
-  },
-},
-  {
-      toJson: {
-          getters: true
-      }
-  }
-);
+
 
 // get total count of comments and replies on retrieval
-thoughtSchema.virtual('friendCount').get(function() {
-return this.friends.length
+thoughtSchema.virtual('reactionCount').get(function () {
+  return this.reactions.length
 });
 
 const Thought = model('Thought', thoughtSchema);

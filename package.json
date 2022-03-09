@@ -20,6 +20,6 @@
   "homepage": "https://github.com/Pabi149/social-NApi#readme",
   "dependencies": {
     "express": "^4.17.3",
-    "mongoose": "^6.2.4"
+    "mongoose": "^6.2.5"
   }
 }
